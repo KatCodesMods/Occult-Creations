@@ -2,8 +2,10 @@ package dev.katcodes.occultcreate;
 
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
+import com.simibubi.create.content.kinetics.fan.processing.FanProcessingTypeRegistry;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -29,6 +31,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
+
+import dev.katcodes.occultcreate.ProcessingTypes.SpiritProcessing;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(OccultCreate.MODID)
@@ -79,6 +83,7 @@ public class OccultCreate
         LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
 
         Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
+        FanProcessingTypeRegistry.register(new ResourceLocation(MODID,"spirit_fire_blasting"),new SpiritProcessing());
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

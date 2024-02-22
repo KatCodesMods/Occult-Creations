@@ -165,6 +165,7 @@ repositories {
     }
     maven {
         //Modonomicon on 1.19.2 still used repsy maven for some versions
+        
         name = "KliKli Dev Repsy Maven"
         url = "https://repo.repsy.io/mvn/klikli-dev/mods"
         content {
