@@ -83,7 +83,7 @@ minecraft {
                 }
             }
             property 'mixin.env.remapRefMap', 'true'
-property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
 
         client {
@@ -120,28 +120,49 @@ repositories {
         name = 'tterrag maven'
         url = 'https://maven.tterrag.com/'
     }
-      maven {
-    // location of the maven that hosts JEI files before January 2023
-    name = "Progwml6's maven"
-    url = "https://dvs1.progwml6.com/files/maven/"
-  }
-  maven {
-    // location of the maven that hosts JEI files since January 2023
-    name = "Jared's maven"
-    url = "https://maven.blamejared.com/"
-  }
-  maven {
-    // location of a maven mirror for JEI files, as a fallback
-    name = "ModMaven"
-    url = "https://modmaven.dev"
-  }
-   maven {
-    name = "KliKli Dev Maven"
-    url="https://dl.cloudsmith.io/public/klikli-dev/mods/maven/"
-       content {
-           includeGroup "com.github.klikli_dev"
-       }
-  }
+    maven {
+        // location of the maven that hosts JEI files before January 2023
+        name = "Progwml6's maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
+    maven {
+        name = "Curios Maven"
+        url = "https://maven.theillusivec4.top/"
+        content {
+            includeGroup "top.theillusivec4.curios"
+        }
+    }
+    maven {
+        name = "Geckolib Maven"
+        url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
+        content {
+            includeGroup "software.bernie.geckolib"
+        }
+    }
+    maven {
+        name "SBL Maven"
+        url "https://dl.cloudsmith.io/public/tslat/sbl/maven/"
+        content {
+            includeGroup "net.tslat.smartbrainlib"
+        }
+    }
+    maven {
+        name = "KliKli Dev Maven"
+        url = "https://dl.cloudsmith.io/public/klikli-dev/mods/maven/"
+        content {
+            includeGroup "com.github.klikli_dev"
+        }
+    }
     maven {
         //Modonomicon on 1.19.2 still used repsy maven for some versions
         name = "KliKli Dev Repsy Maven"
@@ -185,16 +206,16 @@ dependencies {
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${geckolib_version}")
     implementation fg.deobf("net.tslat.smartbrainlib:SmartBrainLib-forge-${minecraft_version}:${smartbrainlib_version}")
     implementation fg.deobf("com.klikli_dev:modonomicon:${minecraft_version}-${modonomicon_version}")
-    implementation fg.deobf("com.klikli_dev:theurgy:${minecraft_version}-${theurgy_version}"){ transitive = false }
+    implementation fg.deobf("com.klikli_dev:theurgy:${minecraft_version}-${theurgy_version}") { transitive = false }
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curios_version}:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curios_version}")
     implementation fg.deobf("com.almostreliable.mods:almostunified-forge:${almostunified_version}")
 
     //occultism
-    implementation fg.deobf("com.github.klikli_dev:occultism-${minecraft_version}:${occultism_version}"){ transitive = false }
+    implementation fg.deobf("com.github.klikli_dev:occultism-${minecraft_version}:${occultism_version}") { transitive = false }
 
-  // at runtime, use the full JEI jar for Forge
-  
+    // at runtime, use the full JEI jar for Forge
+
 
 }
 
@@ -204,11 +225,11 @@ dependencies {
 // See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
-            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-            forge_version: forge_version, forge_version_range: forge_version_range,
+            minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version       : forge_version, forge_version_range: forge_version_range,
             loader_version_range: loader_version_range,
-            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
+            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors         : mod_authors, mod_description: mod_description,
     ]
     inputs.properties replaceProperties
 
