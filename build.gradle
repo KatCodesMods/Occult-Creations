@@ -136,12 +136,20 @@ repositories {
     url = "https://modmaven.dev"
   }
    maven {
+    name = "KliKli Dev Maven"
     url="https://dl.cloudsmith.io/public/klikli-dev/mods/maven/"
-
-    content {
-        includeGroup "com.github.klikli_dev"
-    }
+       content {
+           includeGroup "com.github.klikli_dev"
+       }
   }
+    maven {
+        //Modonomicon on 1.19.2 still used repsy maven for some versions
+        name = "KliKli Dev Repsy Maven"
+        url = "https://repo.repsy.io/mvn/klikli-dev/mods"
+        content {
+            includeGroup "com.klikli_dev"
+        }
+    }
 }
 
 
@@ -157,7 +165,7 @@ dependencies {
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
-implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
+    implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
     implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
@@ -170,8 +178,20 @@ implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
-      runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
-    implementation fg.deobf("com.github.klikli_dev:occultism-1.19.2:1.89.0")
+    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+
+
+    //dependencies of occultism
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${geckolib_version}")
+    implementation fg.deobf("net.tslat.smartbrainlib:SmartBrainLib-forge-${minecraft_version}:${smartbrainlib_version}")
+    implementation fg.deobf("com.klikli_dev:modonomicon:${minecraft_version}-${modonomicon_version}")
+    implementation fg.deobf("com.klikli_dev:theurgy:${minecraft_version}-${theurgy_version}"){ transitive = false }
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curios_version}:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curios_version}")
+    implementation fg.deobf("com.almostreliable.mods:almostunified-forge:${almostunified_version}")
+
+    //occultism
+    implementation fg.deobf("com.github.klikli_dev:occultism-${minecraft_version}:${occultism_version}"){ transitive = false }
 
   // at runtime, use the full JEI jar for Forge
   
