@@ -77,7 +77,7 @@ public class OccultCreationsJEI implements IModPlugin {
     private static @NotNull CreateRecipeCategory<SpiritFireRecipe> getSpiritFireRecipeCreateRecipeCategory(Supplier<List<SpiritFireRecipe>> recipesSupplier) {
         CreateRecipeCategory.Info<SpiritFireRecipe> info = new CreateRecipeCategory.Info<>(
                 new mezz.jei.api.recipe.RecipeType<>(new ResourceLocation(MODID,"spirit_fire_blasting"), SpiritFireRecipe.class),
-                Components.translatable("occult_creations.recipe.spirit_fire_blasting" ), new EmptyBackground(178,72), new DoubleItemIcon(() -> new ItemStack(AllItems.PROPELLER.get()), () -> new ItemStack(OccultismBlocks.SPIRIT_FIRE.get())), recipesSupplier, new ArrayList<>(){ { add(ProcessingViaFanCategory.getFan("spirit_fire_blasting"));}});
+                Components.translatable("occult_creations.recipe.spirit_fire_blasting" ), new EmptyBackground(178,72), new DoubleItemIcon(() -> new ItemStack(AllItems.PROPELLER.get()), () -> new ItemStack(OccultismBlocks.SPIRIT_CAMPFIRE.get())), recipesSupplier, new ArrayList<>(){ { add(ProcessingViaFanCategory.getFan("spirit_fire_blasting"));}});
 
         return new FanSpiritingCategory(info);
     }
