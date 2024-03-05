@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
 version = mod_version
@@ -26,7 +27,7 @@ minecraft {
     // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
     //
     // Parchment is an unofficial project maintained by ParchmentMC, separate from MinecraftForge
-    // Additional setup is needed to use their mappings: https://github.com/ParchmentMC/Parchment/wiki/Getting-Started
+    // Additional setup is needed to use their mappings: https://parchmentmc.org/docs/getting-started
     //
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
@@ -74,16 +75,11 @@ minecraft {
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             property 'forge.logging.console.level', 'debug'
 
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', mod_id
-
             mods {
                 "${mod_id}" {
                     source sourceSets.main
                 }
             }
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
 
         client {
@@ -117,23 +113,18 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     maven {
-        name = 'tterrag maven'
-        url = 'https://maven.tterrag.com/'
+        url "https://dl.cloudsmith.io/public/klikli-dev/mods/maven/"
+        content {
+            includeGroup "com.klikli_dev"
+        }
     }
     maven {
-        // location of the maven that hosts JEI files before January 2023
-        name = "Progwml6's maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        // location of the maven that hosts JEI files since January 2023
-        name = "Jared's maven"
-        url = "https://maven.blamejared.com/"
-    }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.dev"
+        name = "JEI and AlmostUnified"
+        url = 'https://maven.blamejared.com/'
+        content {
+            includeGroup "mezz.jei"
+            includeGroup "com.almostreliable.mods"
+        }
     }
     maven {
         name = "Curios Maven"
@@ -150,27 +141,27 @@ repositories {
         }
     }
     maven {
-        name "SBL Maven"
+        name 'LDTTeam - Modding - PerViamInvenire (MineColonies)'
+        url 'https://ldtteam.jfrog.io/ldtteam/modding/'
+        content {
+            includeGroup "com.ldtteam"
+        }
+    }
+    maven {
+        name = "SBL Maven"
         url "https://dl.cloudsmith.io/public/tslat/sbl/maven/"
         content {
             includeGroup "net.tslat.smartbrainlib"
         }
     }
     maven {
-        name = "KliKli Dev Maven"
-        url = "https://dl.cloudsmith.io/public/klikli-dev/mods/maven/"
+        url "https://cursemaven.com"
         content {
-            includeGroup "com.github.klikli_dev"
+            includeGroup "curse.maven"
         }
     }
-    maven {
-        //Modonomicon on 1.19.2 still used repsy maven for some versions
-        
-        name = "KliKli Dev Repsy Maven"
-        url = "https://repo.repsy.io/mvn/klikli-dev/mods"
-        content {
-            includeGroup "com.klikli_dev"
-        }
+    flatDir {
+        dirs 'lib'
     }
 }
 
@@ -181,7 +172,7 @@ dependencies {
     // The "userdev" classifier will be requested and setup by ForgeGradle.
     // If the group id is "net.minecraft" and the artifact id is one of ["client", "server", "joined"],
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    minecraft "net.minecraftforge:forge:${forge_version}"
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
@@ -195,27 +186,33 @@ dependencies {
     // The group id is ignored when searching -- in this case, it is "blank"
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
 
-    // For more info:
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
-    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
-    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+    //Jei
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
+    //curios
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${minecraft_version}:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}+${minecraft_version}")
 
-    //dependencies of occultism
-    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${geckolib_version}")
-    implementation fg.deobf("net.tslat.smartbrainlib:SmartBrainLib-forge-${minecraft_version}:${smartbrainlib_version}")
-    implementation fg.deobf("com.klikli_dev:modonomicon:${minecraft_version}-${modonomicon_version}")
-    implementation fg.deobf("com.klikli_dev:theurgy:${minecraft_version}-${theurgy_version}") { transitive = false }
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curios_version}:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curios_version}")
-    implementation fg.deobf("com.almostreliable.mods:almostunified-forge:${almostunified_version}")
+    //geckolib
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${geckolib_minecraft_version}:${geckolib_version}")
 
-    //occultism
-    implementation fg.deobf("com.github.klikli_dev:occultism-${minecraft_version}:${occultism_version}") { transitive = false }
+    //smartbrainlib
+    implementation fg.deobf("net.tslat.smartbrainlib:SmartBrainLib-forge-${smartbrainlib_minecraft_version}:${smartbrainlib_version}")
+
+    //almostunified
+    implementation fg.deobf("com.almostreliable.mods:almostunified-forge:${minecraft_version}-${almost_unified_version}")
+
+    //modonomicon
+    implementation fg.deobf("com.klikli_dev:modonomicon-${minecraft_version}-forge:${modonomicon_version}")
+
+    //theurgy
+    compileOnly fg.deobf("com.klikli_dev:theurgy-${minecraft_version}:${theurgy_version}"){transitive=false}
+    runtimeOnly fg.deobf("com.klikli_dev:theurgy-${minecraft_version}:${theurgy_version}"){transitive=false}
 
     // at runtime, use the full JEI jar for Forge
+    implementation fg.deobf("com.klikli_dev:occultism-${minecraft_version}:${occultism_version}")
 
 
 }
