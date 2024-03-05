@@ -31,6 +31,7 @@ import java.util.Optional;
 public class SpiritProcessing implements FanProcessingType {
     private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 
+
     @Override
     public boolean isValidAt(Level level, BlockPos pos) {
         return level.getBlockState(pos).getBlock() == OccultismBlocks.SPIRIT_FIRE.get();
@@ -61,7 +62,7 @@ public class SpiritProcessing implements FanProcessingType {
                 level.getRecipeManager().getRecipeFor(OccultismRecipes.SPIRIT_FIRE_TYPE.get(), fakeInventory, level);
 
         if(recipe.isPresent()) {
-            return RecipeApplier.applyRecipeOn(stack, recipe.get());
+            return RecipeApplier.applyRecipeOn(level,stack, recipe.get());
         }
 
         return Collections.emptyList();

@@ -1,6 +1,7 @@
 package dev.katcodes.occultcreate.compat;
 
 import com.klikli_dev.occultism.crafting.recipe.SpiritFireRecipe;
+import net.minecraft.client.gui.GuiGraphics;
 import org.jetbrains.annotations.NotNull;
 
 import com.klikli_dev.occultism.registry.OccultismBlocks;
@@ -25,12 +26,12 @@ public class FanSpiritingCategory extends ProcessingViaFanCategory<SpiritFireRec
     }
 
     @Override
-    protected void renderAttachedBlock(@NotNull PoseStack matrixStack) {
+    protected void renderAttachedBlock(GuiGraphics guiGraphics) {
         GuiGameElement.of(OccultismBlocks.SPIRIT_FIRE.get().defaultBlockState())
                 .scale(SCALE)
                 .atLocal(0, 0, 2)
                 .lighting(AnimatedKinetics.DEFAULT_LIGHTING)
-                .render(matrixStack);
+                .render(guiGraphics);
     }
 
 
