@@ -3,6 +3,14 @@ package dev.katcodes.occultcreate;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingTypeRegistry;
 
+import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import dev.katcodes.occultcreate.common.Config;
+import dev.katcodes.occultcreate.common.OccultCreationJobs;
+import dev.katcodes.occultcreate.common.OccultCreationLang;
+import dev.katcodes.occultcreate.common.items.BookOfCallingCranker;
+import dev.katcodes.occultcreate.common.items.ModItems;
+import dev.katcodes.occultcreate.common.items.itemMode.ItemModes;
 import net.minecraft.resources.ResourceLocation;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,7 +26,7 @@ import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
-import dev.katcodes.occultcreate.ProcessingTypes.SpiritProcessing;
+import dev.katcodes.occultcreate.common.ProcessingTypes.SpiritProcessing;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(OccultCreate.MODID)
@@ -27,7 +35,8 @@ public class OccultCreate
     // Define mod id in a common place for everything to reference
     public static final String MODID = "occultcreate";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final NonNullSupplier<Registrate> REGISTRATE = NonNullSupplier.lazy(() -> Registrate.create(MODID));
     public OccultCreate()
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -37,9 +46,14 @@ public class OccultCreate
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(BookOfCallingCranker.class);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        OccultCreationJobs.init();
+        ModItems.init();
+        OccultCreationLang.init();
+        ItemModes.init();
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)

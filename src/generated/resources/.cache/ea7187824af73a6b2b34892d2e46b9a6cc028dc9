@@ -1,0 +1,4 @@
+// 1.20.1	2024-03-12T12:28:15.145446	Registrate Provider for occultcreate [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+703d46a8480913346c196223f844e162a500a90b assets/occultcreate/lang/en_ud.json
+785cd69731eebb1fd6447b70e4c306ed73874092 assets/occultcreate/lang/en_us.json
+897ab13beaba438a08d56960eb09124a919b2c92 assets/occultcreate/models/item/book_of_calling_foliot_cranker.json

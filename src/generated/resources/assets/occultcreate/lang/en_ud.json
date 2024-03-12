@@ -1,0 +1,11 @@
+{
+  "create.recipe.spirit_fire_blasting.fan": "ǝɯɐןℲ ʇıɹıdS puıɥǝq uɐℲ",
+  "enum.occultism.book_of_calling.item_mode.set_crank": "ʞuɐɹƆ ʇǝS",
+  "item.occultcreate.book_of_calling_foliot_cranker": "ɹǝʞuɐɹƆ ʇoıןoℲ buıןןɐƆ ɟO ʞooᗺ",
+  "items.occultcreate.book_of_calling.message_set_crank": "%s oʇ %s ɹoɟ ǝsɐq ʇǝS",
+  "occult_creations.recipe.spirit_fire_blasting": "buıssǝɔoɹԀ ʇıɹıdS ʞןnᗺ",
+  "ritual.occultcreate.summon_foliot_cranker.conditions": "˙ʇǝɯ ǝɹɐ ןɐnʇıɹ sıɥʇ ɹoɟ sʇuǝɯǝɹınbǝɹ ןןɐ ʇoN",
+  "ritual.occultcreate.summon_foliot_cranker.finished": "˙ʎןןnɟssǝɔɔns ɹǝʞuɐɹɔ ʇoıןoɟ pǝuoɯɯnS",
+  "ritual.occultcreate.summon_foliot_cranker.interrupted": "˙pǝʇdnɹɹǝʇuı sɐʍ ɹǝʞuɐɹɔ ʇoıןoɟ ɟo buıuoɯɯnS",
+  "ritual.occultcreate.summon_foliot_cranker.started": "˙ɹǝʞuɐɹɔ ʇoıןoɟ buıuoɯɯns pǝʇɹɐʇS"
+}

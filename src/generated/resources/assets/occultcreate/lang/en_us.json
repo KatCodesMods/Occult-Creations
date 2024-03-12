@@ -1,0 +1,11 @@
+{
+  "create.recipe.spirit_fire_blasting.fan": "Fan behind Spirit Flame",
+  "enum.occultism.book_of_calling.item_mode.set_crank": "Set Crank",
+  "item.occultcreate.book_of_calling_foliot_cranker": "Book Of Calling Foliot Cranker",
+  "items.occultcreate.book_of_calling.message_set_crank": "Set base for %s to %s",
+  "occult_creations.recipe.spirit_fire_blasting": "Bulk Spirit Processing",
+  "ritual.occultcreate.summon_foliot_cranker.conditions": "Not all requirements for this ritual are met.",
+  "ritual.occultcreate.summon_foliot_cranker.finished": "Summoned foliot cranker successfully.",
+  "ritual.occultcreate.summon_foliot_cranker.interrupted": "Summoning of foliot cranker was interrupted.",
+  "ritual.occultcreate.summon_foliot_cranker.started": "Started summoning foliot cranker."
+}
