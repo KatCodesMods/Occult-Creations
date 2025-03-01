@@ -1,79 +1,92 @@
 package dev.katcodes.occultcreate;
 
-import com.mojang.logging.LogUtils;
-import com.simibubi.create.content.kinetics.fan.processing.FanProcessingTypeRegistry;
 
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import dev.katcodes.occultcreate.common.Config;
-import dev.katcodes.occultcreate.common.OccultCreationJobs;
-import dev.katcodes.occultcreate.common.OccultCreationLang;
-import dev.katcodes.occultcreate.common.items.BookOfCallingCranker;
-import dev.katcodes.occultcreate.common.items.ModItems;
-import dev.katcodes.occultcreate.common.items.itemMode.ItemModes;
-import net.minecraft.resources.ResourceLocation;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import com.simibubi.create.api.registry.CreateBuiltInRegistries;
+import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
+import dev.katcodes.occultcreate.common.ProcessingTypes.SpiritProcessing;
+import dev.katcodes.occultcreate.common.datagen.ENLanguageProvider;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import org.slf4j.Logger;
 
-import dev.katcodes.occultcreate.common.ProcessingTypes.SpiritProcessing;
+import com.mojang.logging.LogUtils;
 
-// The value here should match an entry in the META-INF/mods.toml file
+
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+// The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(OccultCreate.MODID)
 public class OccultCreate
 {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "occultcreate";
     // Directly reference a slf4j logger
-    public static final Logger LOGGER = LogUtils.getLogger();
-    public static final NonNullSupplier<Registrate> REGISTRATE = NonNullSupplier.lazy(() -> Registrate.create(MODID));
-    public OccultCreate()
-    {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    private static final Logger LOGGER = LogUtils.getLogger();
 
+    public static final DeferredRegister<FanProcessingType> FAN_PROCESSING_TYPES = DeferredRegister.create(
+            CreateBuiltInRegistries.FAN_PROCESSING_TYPE,MODID
+    );
+
+    public static final DeferredHolder<FanProcessingType, SpiritProcessing>  SPIRIT_PROCESSING_TYPE = FAN_PROCESSING_TYPES.register("spirit_fire_blasting",SpiritProcessing::new);
+
+    // The constructor for the mod class is the first code that is run when your mod is loaded.
+    // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
+    public OccultCreate(IEventBus modEventBus, ModContainer modContainer)
+    {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
+        // Register ourselves for server and other game events we are interested in.
+        // Note that this is necessary if and only if we want *this* class (OccultCreations) to respond directly to events.
+        // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
+        NeoForge.EVENT_BUS.register(this);
 
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(BookOfCallingCranker.class);
+        // Register the item to a creative tab
+        modEventBus.addListener(this::addCreative);
 
-        // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-        OccultCreationJobs.init();
-        ModItems.init();
-        OccultCreationLang.init();
-        ItemModes.init();
+
+        FAN_PROCESSING_TYPES.register(modEventBus);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-        FanProcessingTypeRegistry.register(new ResourceLocation(MODID,"spirit_fire_blasting"),new SpiritProcessing());
+
+    }
+
+    // Add the example block item to the building blocks tab
+    private void addCreative(BuildCreativeModeTabContentsEvent event)
+    {
+
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
+
     }
 
+
+
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
+
         }
     }
 }

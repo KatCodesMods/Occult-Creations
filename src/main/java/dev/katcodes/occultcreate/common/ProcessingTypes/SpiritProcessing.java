@@ -1,26 +1,25 @@
 package dev.katcodes.occultcreate.common.ProcessingTypes;
 
-import com.klikli_dev.occultism.crafting.recipe.ItemStackFakeInventory;
 import com.klikli_dev.occultism.crafting.recipe.SpiritFireRecipe;
 import com.klikli_dev.occultism.registry.OccultismBlocks;
 import com.klikli_dev.occultism.registry.OccultismParticles;
 import com.klikli_dev.occultism.registry.OccultismRecipes;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,7 @@ public class SpiritProcessing implements FanProcessingType {
 
     @Override
     public boolean isValidAt(Level level, BlockPos pos) {
-        return level.getBlockState(pos).getBlock() == OccultismBlocks.SPIRIT_FIRE.get();
+        return level.getBlockState(pos).getBlock() == OccultismBlocks.SPIRIT_FIRE.get() || level.getBlockState(pos).getBlock() == OccultismBlocks.SPIRIT_CAMPFIRE.get();
     }
 
     @Override
@@ -41,22 +40,20 @@ public class SpiritProcessing implements FanProcessingType {
 
     @Override
     public boolean canProcess(ItemStack stack, Level level) {
-        ItemStackFakeInventory fakeInventory =
-                new ItemStackFakeInventory(ItemStack.EMPTY);
-        fakeInventory.setItem(0, stack);
-        Optional<SpiritFireRecipe> recipe =
-                level.getRecipeManager().getRecipeFor(OccultismRecipes.SPIRIT_FIRE_TYPE.get(), fakeInventory, level);
+        var recipeInput =
+                new SingleRecipeInput(stack);
+        Optional<RecipeHolder<SpiritFireRecipe>> recipe =
+                level.getRecipeManager().getRecipeFor(OccultismRecipes.SPIRIT_FIRE_TYPE.get(), recipeInput, level);
         return recipe.isPresent();
 
     }
 
     @Override
     public @Nullable List<ItemStack> process(ItemStack stack, Level level) {
-        ItemStackFakeInventory fakeInventory =
-                new ItemStackFakeInventory(ItemStack.EMPTY);
-        fakeInventory.setItem(0, stack);
-        Optional<SpiritFireRecipe> recipe =
-                level.getRecipeManager().getRecipeFor(OccultismRecipes.SPIRIT_FIRE_TYPE.get(), fakeInventory, level);
+        var recipeInput =
+                new SingleRecipeInput(stack);
+        Optional<RecipeHolder<SpiritFireRecipe>> recipe =
+                level.getRecipeManager().getRecipeFor(OccultismRecipes.SPIRIT_FIRE_TYPE.get(), recipeInput, level);
 
         if(recipe.isPresent()) {
             return RecipeApplier.applyRecipeOn(level,stack, recipe.get());
@@ -69,7 +66,8 @@ public class SpiritProcessing implements FanProcessingType {
     public void spawnProcessingParticles(Level level, Vec3 pos) {
         if (level.random.nextInt(8) != 0)
             return;
-        level.addParticle(OccultismParticles.SPIRIT_FIRE_FLAME.orElse(ParticleTypes.FLAME),pos.x, pos.y + .25f, pos.z, 0, 1 / 16f, 0);
+
+        level.addParticle(OccultismParticles.SPIRIT_FIRE_FLAME.get(),pos.x, pos.y + .25f, pos.z, 0, 1 / 16f, 0);
     }
 
     @Override
@@ -77,7 +75,7 @@ public class SpiritProcessing implements FanProcessingType {
         particleAccess.setColor(0x8A2BE2);
         particleAccess.setAlpha(.5f);
         if (random.nextFloat() < 1 / 32f)
-            particleAccess.spawnExtraParticle(OccultismParticles.SPIRIT_FIRE_FLAME.orElse(ParticleTypes.FLAME), .25f);
+            particleAccess.spawnExtraParticle(OccultismParticles.SPIRIT_FIRE_FLAME.get(), .25f);
         if (random.nextFloat() < 1 / 16f)
             particleAccess.spawnExtraParticle(new BlockParticleOption(ParticleTypes.BLOCK, OccultismBlocks.SPIRIT_FIRE.get().defaultBlockState()), .25f);
     }
